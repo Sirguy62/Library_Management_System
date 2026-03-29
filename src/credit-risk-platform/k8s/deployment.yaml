@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: creditrisk-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: creditrisk
+  template:
+    metadata:
+      labels:
+        app: creditrisk
+    spec:
+      containers:
+        - name: creditrisk
+          image: sirguy68/creditrisk-app:latest
+          ports:
+            - containerPort: 8080

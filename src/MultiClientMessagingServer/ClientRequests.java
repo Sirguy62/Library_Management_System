@@ -66,7 +66,9 @@ public class ClientRequests implements Runnable {
 //                }
 //            }
 
-            clients.add(this);
+            synchronized (clients) {
+                clients.add(this);
+            }
             broadcast(username + " joined the server");
 
             List<String> history = MessageDAO.getRecentMessages(20);
