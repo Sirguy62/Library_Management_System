@@ -1,0 +1,94 @@
+inventory-api/
+├── pom.xml
+└── src/main/java/com/inventoryapi/
+    ├── Main.java
+    ├── Router.java
+    ├── db/
+    │   └── DatabaseConnection.java
+    ├── model/
+    │   ├── User.java
+    │   ├── AuthToken.java
+    │   ├── Product.java
+    │   ├── Category.java
+    │   ├── Supplier.java
+    │   └── StockMovement.java
+    ├── store/
+    │   ├── UserStore.java
+    │   ├── ProductStore.java
+    │   ├── CategoryStore.java
+    │   ├── SupplierStore.java
+    │   └── StockStore.java
+    ├── handler/
+    │   ├── AuthHandler.java
+    │   ├── ProductHandler.java
+    │   ├── CategoryHandler.java
+    │   ├── SupplierHandler.java
+    │   └── StockHandler.java
+    ├── engine/
+    │   └── StockAlertEngine.java
+    ├── middleware/
+    │   └── AuthMiddleware.java
+    └── util/
+        ├── HttpUtil.java
+        ├── JsonUtil.java
+        └── PasswordUtil.java
+
+
+
+
+ CREATE DATABASE inventory;
+
+ \c inventory
+
+ CREATE TABLE users (
+     id            VARCHAR(36)  PRIMARY KEY,
+     email         VARCHAR(255) UNIQUE NOT NULL,
+     username      VARCHAR(255) NOT NULL,
+     password_hash VARCHAR(255) NOT NULL,
+     created_at    VARCHAR(50)  NOT NULL
+ );
+
+ CREATE TABLE auth_tokens (
+     token      VARCHAR(36) PRIMARY KEY,
+     user_id    VARCHAR(36) NOT NULL,
+     expires_at VARCHAR(50) NOT NULL
+ );
+
+ CREATE TABLE categories (
+     id          VARCHAR(36)  PRIMARY KEY,
+     name        VARCHAR(255) UNIQUE NOT NULL,
+     description VARCHAR(500),
+     created_at  VARCHAR(50)  NOT NULL
+ );
+
+ CREATE TABLE suppliers (
+     id         VARCHAR(36)  PRIMARY KEY,
+     name       VARCHAR(255) NOT NULL,
+     email      VARCHAR(255),
+     phone      VARCHAR(50),
+     address    VARCHAR(500),
+     created_at VARCHAR(50)  NOT NULL
+ );
+
+ CREATE TABLE products (
+     id           VARCHAR(36)   PRIMARY KEY,
+     name         VARCHAR(255)  NOT NULL,
+     description  VARCHAR(500),
+     category_id  VARCHAR(36)   REFERENCES categories(id),
+     supplier_id  VARCHAR(36)   REFERENCES suppliers(id),
+     price        DECIMAL(15,2) NOT NULL DEFAULT 0,
+     quantity     INT           NOT NULL DEFAULT 0,
+     min_quantity INT           NOT NULL DEFAULT 10,
+     created_at   VARCHAR(50)   NOT NULL
+ );
+
+ CREATE TABLE stock_movements (
+     id         VARCHAR(36) PRIMARY KEY,
+     product_id VARCHAR(36) NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+     type       VARCHAR(10) NOT NULL,
+     quantity   INT         NOT NULL,
+     note       VARCHAR(255),
+     moved_at   VARCHAR(50) NOT NULL
+ );
+
+
